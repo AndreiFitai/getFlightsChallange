@@ -7,10 +7,14 @@ Requires npm and nodeJS v10+
 1. Clone or copy this repo
 2. run `npm install`
 3. Add .env file with the following variables
-   PORT
-   BASE_URL
-   AUTH_USER
-   AUTH_PASSWORD
+
+`PORT` - Specify alternative port for the service
+
+`BASE_URL` - **Required** API base url
+
+`AUTH_USER` - **Required** API Basic auth user
+
+`AUTH_PASSWORD` - **Required** API Basic auth password
 
 4. Run `npm run start`
 5. 6. Go to `http://localhost:<PORT>` to test.
