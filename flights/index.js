@@ -1,22 +1,13 @@
-const axios = require("axios");
-const { getEnv } = require("../helpers");
 const {
+  axiosInstance,
   processApiRespose,
   handleError,
   processFlightsData
 } = require("./utils");
 
-const instance = axios.create({
-  baseURL: getEnv("BASE_URL", true),
-  auth: {
-    username: getEnv("AUTH_USER", true),
-    password: getEnv("AUTH_PASSWORD", true)
-  }
-});
-
 const getFlights1 = async () => {
   try {
-    const response = await instance.get("/source1");
+    const response = await axiosInstance.get("/source1");
     return processApiRespose(response);
   } catch (error) {
     return handleError(error);
@@ -25,7 +16,7 @@ const getFlights1 = async () => {
 
 const getFlights2 = async () => {
   try {
-    const response = await instance.get("/source2");
+    const response = await axiosInstance.get("/source2");
     return processApiRespose(response);
   } catch (error) {
     return handleError(error);

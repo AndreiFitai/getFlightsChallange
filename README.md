@@ -17,4 +17,4 @@ Requires npm and nodeJS v10+
 `AUTH_PASSWORD` - **Required** API Basic auth password
 
 4. Run `npm run start`
-5. 6. Go to `http://localhost:<PORT>` to test.
+5. Go to `http://localhost:<PORT>` to test.

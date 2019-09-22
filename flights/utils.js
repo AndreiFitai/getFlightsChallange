@@ -1,4 +1,14 @@
+const axios = require("axios");
+const { getEnv } = require("../helpers");
 const { logger } = require("../helpers");
+
+const axiosInstance = axios.create({
+  baseURL: getEnv("BASE_URL", true),
+  auth: {
+    username: getEnv("AUTH_USER", true),
+    password: getEnv("AUTH_PASSWORD", true)
+  }
+});
 
 const processApiRespose = response => {
   const processedData = [];
@@ -61,4 +71,9 @@ const handleError = error => {
   } else return error;
 };
 
-module.exports = { processApiRespose, processFlightsData, handleError };
+module.exports = {
+  axiosInstance,
+  processApiRespose,
+  processFlightsData,
+  handleError
+};
