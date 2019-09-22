@@ -10,14 +10,44 @@ const axiosInstance = axios.create({
   },
 });
 
-const processApiRespose = response => {
+const processApiResponse = response => {
   const processedData = [];
-  for (let i = 0; i < response.data.flights.length; i += 1) {
-    const flight = response.data.flights[i];
-    flight.id = `${flight.flight_number}_${flight.departure_date_time_utc}`;
-    processedData.push(flight);
+  for (let i = 0, n = response.data.flights.length; i < n; i += 1) {
+    const roundTrip = response.data.flights[i].slices;
+    for (let j = 0, m = roundTrip.length; j < m; j += 1) {
+      const flight = roundTrip[j];
+      flight.id = `${flight.flight_number}_${flight.departure_date_time_utc}`;
+      processedData.push(flight);
+    }
   }
   return processedData;
+};
+
+const handleError = error => {
+  if (error.response) {
+    logger.info(error.response.status, error.response.data);
+
+    return {
+      error: { message: error.response.data, status: error.response.status },
+    };
+  }
+  if (error.request) {
+    const message = 'Something went wrong with the request';
+
+    logger.error(message);
+
+    return { error: { message } };
+  }
+  return error;
+};
+
+const getData = async path => {
+  try {
+    const response = await axiosInstance.get(path);
+    return processApiResponse(response);
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 //* optimized for performance
@@ -52,27 +82,7 @@ const processFlightsData = (...flightLists) => {
 //   return { flights: [...filteredFlights] };
 // };
 
-const handleError = error => {
-  if (error.response) {
-    logger.info(error.response.status, error.response.data);
-
-    return {
-      error: { message: error.response.data, status: error.response.status },
-    };
-  }
-  if (error.request) {
-    const message = 'Something went wrong with the request';
-
-    logger.error(message);
-
-    return { error: { message } };
-  }
-  return error;
-};
-
 module.exports = {
-  axiosInstance,
-  processApiRespose,
+  getData,
   processFlightsData,
-  handleError,
 };
