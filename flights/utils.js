@@ -1,23 +1,22 @@
-const axios = require("axios");
-const { getEnv } = require("../helpers");
-const { logger } = require("../helpers");
+const axios = require('axios');
+const { getEnv } = require('../helpers');
+const { logger } = require('../helpers');
 
 const axiosInstance = axios.create({
-  baseURL: getEnv("BASE_URL", true),
+  baseURL: getEnv('BASE_URL', true),
   auth: {
-    username: getEnv("AUTH_USER", true),
-    password: getEnv("AUTH_PASSWORD", true)
-  }
+    username: getEnv('AUTH_USER', true),
+    password: getEnv('AUTH_PASSWORD', true),
+  },
 });
 
 const processApiRespose = response => {
   const processedData = [];
-  response.data.flights.map(trip => {
-    for (let flight of trip.slices) {
-      flight.id = `${flight.flight_number}_${flight.departure_date_time_utc}`;
-      processedData.push(flight);
-    }
-  });
+  for (let i = 0; i < response.data.flights.length; i += 1) {
+    const flight = response.data.flights[i];
+    flight.id = `${flight.flight_number}_${flight.departure_date_time_utc}`;
+    processedData.push(flight);
+  }
   return processedData;
 };
 
@@ -25,10 +24,10 @@ const processApiRespose = response => {
 const processFlightsData = (...flightLists) => {
   const filteredFlights = [];
 
-  for (let i = 0, n = flightLists.length; i < n; ++i) {
+  for (let i = 0, n = flightLists.length; i < n; i += 1) {
     if (flightLists[i].error) return flightLists[i].error;
 
-    for (let j = 0, m = flightLists[i].length; j < m; ++j) {
+    for (let j = 0, m = flightLists[i].length; j < m; j += 1) {
       if (!filteredFlights.some(item => item.id === flightLists[i][j].id))
         filteredFlights.push(flightLists[i][j]);
     }
@@ -39,17 +38,15 @@ const processFlightsData = (...flightLists) => {
 
 //* better readability
 // const processFlightsData = (...flightLists) => {
-//   if (list.error) return list.error;
-
 //   const filteredFlights = [];
 
 //   flightLists.forEach(list => {
 //     if (list.error) return list.error;
-
 //     list.forEach(flight => {
 //       if (!filteredFlights.some(item => item.id === flight.id))
 //         filteredFlights.push(flight);
 //     });
+//     return false;
 //   });
 
 //   return { flights: [...filteredFlights] };
@@ -60,20 +57,22 @@ const handleError = error => {
     logger.info(error.response.status, error.response.data);
 
     return {
-      error: { message: error.response.data, status: error.response.status }
+      error: { message: error.response.data, status: error.response.status },
     };
-  } else if (error.request) {
-    const message = "Something went wrong with the request";
+  }
+  if (error.request) {
+    const message = 'Something went wrong with the request';
 
     logger.error(message);
 
     return { error: { message } };
-  } else return error;
+  }
+  return error;
 };
 
 module.exports = {
   axiosInstance,
   processApiRespose,
   processFlightsData,
-  handleError
+  handleError,
 };

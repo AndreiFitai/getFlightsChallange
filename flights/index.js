@@ -2,12 +2,12 @@ const {
   axiosInstance,
   processApiRespose,
   handleError,
-  processFlightsData
-} = require("./utils");
+  processFlightsData,
+} = require('./utils');
 
 const getFlights1 = async () => {
   try {
-    const response = await axiosInstance.get("/source1");
+    const response = await axiosInstance.get('/source1');
     return processApiRespose(response);
   } catch (error) {
     return handleError(error);
@@ -16,7 +16,7 @@ const getFlights1 = async () => {
 
 const getFlights2 = async () => {
   try {
-    const response = await axiosInstance.get("/source2");
+    const response = await axiosInstance.get('/source2');
     return processApiRespose(response);
   } catch (error) {
     return handleError(error);
@@ -33,7 +33,3 @@ const getFlights = async () => {
 };
 
 module.exports = { getFlights };
-
-// if (flightDataOne.error || flightDataTwo.error) {
-//   return flightDataOne.error || flightDataTwo.error;
-// }
