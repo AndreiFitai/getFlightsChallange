@@ -1,36 +1,48 @@
 const axios = require("axios");
 const { getEnv } = require("../helpers");
+const {
+  processApiRespose,
+  handleError,
+  processFlightsData
+} = require("./utils");
 
 const instance = axios.create({
-  baseURL: getEnv("BASE_URL"),
+  baseURL: getEnv("BASE_URL", true),
   auth: {
-    username: getEnv("AUTH_USER"),
-    password: getEnv("AUTH_PASSWORD")
+    username: getEnv("AUTH_USER", true),
+    password: getEnv("AUTH_PASSWORD", true)
   }
 });
 
-const getFlights1 = () => {
-  return instance.get("/source1");
+const getFlights1 = async () => {
+  try {
+    const response = await instance.get("/source1");
+    return processApiRespose(response);
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
-const getFlights2 = () => {
-  return instance.get("/source2");
+const getFlights2 = async () => {
+  try {
+    const response = await instance.get("/source2");
+    return processApiRespose(response);
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 const getFlights = async () => {
-  const [flights1, flights2] = await Promise.all([
-    getFlights1(),
-    getFlights2()
-  ]);
-  const flightDataOne = flights1.data.flights;
-  const flightDataTwo = flights2.data.flights;
-  const result = flightDataOne.concat(
-    flightDataTwo.filter(item => {
-      return flightDataOne.indexOf(item) < 0;
-    })
-  );
+  const flightDataOne = await getFlights1();
+  const flightDataTwo = await getFlights2();
 
-  return { flights: [...result] };
+  const result = processFlightsData(flightDataOne, flightDataTwo);
+
+  return result;
 };
 
 module.exports = { getFlights };
+
+// if (flightDataOne.error || flightDataTwo.error) {
+//   return flightDataOne.error || flightDataTwo.error;
+// }

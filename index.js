@@ -19,7 +19,9 @@ server.listen({ port }, () => {
 
 router.get("/", async (req, res) => {
   console.time("query time: ");
+
   const flights = await getFlights();
   res.send(JSON.stringify(flights));
+  
   console.timeEnd("query time: ");
 });
