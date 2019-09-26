@@ -23,7 +23,7 @@ describe('flights', () => {
     it('should return just error object value if its an argument', () => {
       const listsWithError = [...flightLists, { error: 'Error' }];
       const result = processFlightsData(...listsWithError);
-      expect(result).to.be.equal('Error');
+      expect(result).to.be.deep.equal({ error: 'Error' });
     });
   });
 });

@@ -1,8 +1,8 @@
 const express = require('express');
 const http = require('http');
 const { logger, getEnv } = require('./helpers');
-const { getFlights } = require('./flights');
-const { initialCache, getCachedData, cacheData } = require('./cache');
+const flights = require('./flights');
+const { initialCache } = require('./cache');
 
 const app = express();
 const router = express.Router();
@@ -21,14 +21,8 @@ server.listen({ port }, () => {
 router.get('/', async (req, res) => {
   console.time('query time: ');
 
-  const flights = await getFlights();
-  if (flights.error) {
-    res.send(JSON.stringify(getCachedData(flights)));
-  } else {
-    cacheData(flights);
-
-    res.send(JSON.stringify(flights));
-  }
+  const flightsData = await flights();
+  res.send(flightsData);
 
   console.timeEnd('query time: ');
 });

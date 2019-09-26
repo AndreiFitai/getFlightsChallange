@@ -1,10 +1,13 @@
-const { getCacheOnTimeout } = require('../cache');
-const { getNewData } = require('./flights');
+const getFlights = require('./getFlights');
+const { cacheData, getCachedData } = require('../cache');
 
-const getFlights = async () => {
-  return Promise.race([getNewData(), getCacheOnTimeout(900)]).then(value => {
-    return value;
-  });
+module.exports = async () => {
+  const flights = await getFlights();
+  if (flights.error) {
+    return JSON.stringify(getCachedData(flights));
+  }
+
+  cacheData(flights);
+
+  return JSON.stringify(flights);
 };
-
-module.exports = { getFlights };

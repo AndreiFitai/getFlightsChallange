@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { getEnv } = require('../helpers');
-const { handleError } = require('../errors');
+const handleError = require('../errors');
 
 const axiosInstance = axios.create({
   baseURL: getEnv('BASE_URL', true),
@@ -37,7 +37,7 @@ const getData = async path => {
     const response = await axiosInstance.get(path);
     return processApiResponse(response);
   } catch (error) {
-    return handleError(error);
+    return handleError(error, path);
   }
 };
 
@@ -57,7 +57,7 @@ const processFlightsData = (...flightLists) => {
   return { dataStatus: 'Live', flights: filteredFlights };
 };
 
-const getNewData = async () => {
+const getNewFlightsData = async () => {
   const flightDataOne = await getData('/source1');
   const flightDataTwo = await getData('/source2');
   const result = processFlightsData(flightDataOne, flightDataTwo);
@@ -66,7 +66,7 @@ const getNewData = async () => {
 };
 
 module.exports = {
-  getNewData,
+  getNewFlightsData,
   getData,
   processApiResponse,
   processFlightsData,
