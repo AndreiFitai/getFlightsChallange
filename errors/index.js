@@ -2,7 +2,7 @@ const { logger } = require('../helpers');
 
 module.exports = (error, path) => {
   if (error.response) {
-    logger.info(error.response.status, error.response.data);
+    logger.info(path, error.response.status, error.response.data);
 
     return {
       error: {

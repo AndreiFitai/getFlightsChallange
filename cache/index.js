@@ -31,7 +31,7 @@ const getCacheOnTimeout = delay => {
     setTimeout(
       resolve,
       delay,
-      getCachedData({ error: { message: 'Api took too long to respond' } }),
+      getCachedData({ error: { message: 'Service took too long to respond' } }),
     ),
   );
 };
