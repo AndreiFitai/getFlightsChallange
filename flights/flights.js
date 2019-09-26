@@ -47,17 +47,26 @@ const processFlightsData = (...flightLists) => {
   for (let i = 0; i < flightLists.length; i++) {
     const list = flightLists[i];
 
-    if (list.error) return list.error;
+    if (list.error) return list;
 
     list.forEach(flight => {
       Object.assign(filteredFlights, flight);
     });
   }
 
-  return { flights: filteredFlights };
+  return { dataStatus: 'Live', flights: filteredFlights };
+};
+
+const getNewData = async () => {
+  const flightDataOne = await getData('/source1');
+  const flightDataTwo = await getData('/source2');
+  const result = processFlightsData(flightDataOne, flightDataTwo);
+
+  return result;
 };
 
 module.exports = {
+  getNewData,
   getData,
   processApiResponse,
   processFlightsData,

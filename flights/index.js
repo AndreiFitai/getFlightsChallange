@@ -1,12 +1,10 @@
-const { getData, processFlightsData } = require('./flights');
+const { getCacheOnTimeout } = require('../cache');
+const { getNewData } = require('./flights');
 
 const getFlights = async () => {
-  const flightDataOne = await getData('/source1');
-  const flightDataTwo = await getData('/source2');
-
-  const result = processFlightsData(flightDataOne, flightDataTwo);
-
-  return result;
+  return Promise.race([getNewData(), getCacheOnTimeout(900)]).then(value => {
+    return value;
+  });
 };
 
 module.exports = { getFlights };
