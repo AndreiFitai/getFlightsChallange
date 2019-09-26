@@ -13,6 +13,12 @@
         "allowAfterThis": true
       }
     ],
+    "no-plusplus": [
+      "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+    ],
     "max-len": [
       "warn",
       {

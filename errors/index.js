@@ -1,6 +1,6 @@
 const { logger } = require('../helpers');
 
-module.export = error => {
+const handleError = error => {
   if (error.response) {
     logger.info(error.response.status, error.response.data);
 
@@ -17,3 +17,5 @@ module.export = error => {
   }
   return error;
 };
+
+module.exports = { handleError };

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { getEnv } = require('../helpers');
-const handleError = require('../errors');
+const { handleError } = require('../errors');
 
 const axiosInstance = axios.create({
   baseURL: getEnv('BASE_URL', true),
@@ -10,15 +10,24 @@ const axiosInstance = axios.create({
   },
 });
 
+const createId = flight => {
+  const departureSlice1 = Date.parse(flight.slices[0].departure_date_time_utc);
+  const departureSlice2 = Date.parse(flight.slices[1].departure_date_time_utc);
+  return (
+    flight.slices[0].flight_number +
+    flight.slices[1].flight_number +
+    departureSlice1 +
+    departureSlice2
+  );
+};
+
 const processApiResponse = response => {
   const processedData = [];
-  response.data.flights.forEach(roundTrip => {
-    roundTrip.forEach(flight => {
-      Object.assign(flight, {
-        id: `${flight.flight_number}_${flight.departure_date_time_utc}`,
-      });
-      processedData.push(flight);
-    });
+  response.data.flights.forEach(flight => {
+    const id = createId(flight);
+    const flightWithId = {};
+    flightWithId[id] = flight;
+    processedData.push(flightWithId);
   });
   return processedData;
 };
@@ -33,21 +42,23 @@ const getData = async path => {
 };
 
 const processFlightsData = (...flightLists) => {
-  const filteredFlights = [];
+  const filteredFlights = {};
 
-  flightLists.forEach(list => {
+  for (let i = 0; i < flightLists.length; i++) {
+    const list = flightLists[i];
+
     if (list.error) return list.error;
-    list.forEach(flight => {
-      if (!filteredFlights.some(item => item.id === flight.id))
-        filteredFlights.push(flight);
-    });
-    return false;
-  });
 
-  return { flights: [...filteredFlights] };
+    list.forEach(flight => {
+      Object.assign(filteredFlights, flight);
+    });
+  }
+
+  return { flights: filteredFlights };
 };
 
 module.exports = {
   getData,
+  processApiResponse,
   processFlightsData,
 };
