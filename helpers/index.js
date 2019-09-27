@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const defaultOptions = {
+  enabled: !(process.env.NODE_ENV === 'test'),
   prettyPrint: {
     colorize: true,
     translateTime: false,

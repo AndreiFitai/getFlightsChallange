@@ -60,6 +60,7 @@ const processFlightsData = (...flightLists) => {
 const getNewFlightsData = async () => {
   const flightDataOne = await getData('/source1');
   const flightDataTwo = await getData('/source2');
+
   const result = processFlightsData(flightDataOne, flightDataTwo);
 
   return result;

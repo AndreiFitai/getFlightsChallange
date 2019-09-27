@@ -1,4 +1,4 @@
-const { getNewFlightsData } = require('../flights/flightsDataUtils');
+const flightsUtils = require('../flights/flightsDataUtils');
 const { logger } = require('../helpers');
 
 const cache = {};
@@ -13,11 +13,11 @@ const setData = data => {
 };
 
 const setInitial = async () => {
-  const data = await getNewFlightsData();
+  const data = await flightsUtils.getNewFlightsData();
   if (!Object.keys(data).includes('flights')) {
     await setInitial();
   } else {
-    Object.assign(cache, data, cachedStatus);
+    setData(data);
     logger.info(`Initial flights data cached!`);
   }
 };
