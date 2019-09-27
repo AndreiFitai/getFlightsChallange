@@ -9,9 +9,9 @@ Requires npm 6.x and nodeJS v10+
 3. run `npm test` to run all tests
 4. Add .env file with the following variables
 
-`PORT` - Specify alternative port for the service
+`PORT` - Specify alternative port for the service - Defaults to 3000
 
-`RESPONSE_TIME` - Specify max service wait time
+`RESPONSE_TIME` - Specify max service wait time in ms - Defaults to 900
 
 `BASE_URL` - **Required** API base url
 
