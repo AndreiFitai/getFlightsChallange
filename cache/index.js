@@ -4,7 +4,7 @@ const { logger } = require('../helpers');
 const cache = {};
 const cachedStatus = { dataStatus: 'Cached' };
 
-const cacheData = data => {
+const setData = data => {
   if (!Object.keys(data).includes('flights')) {
     return false;
   }
@@ -12,28 +12,33 @@ const cacheData = data => {
   return true;
 };
 
-const initialCache = async () => {
+const setInitial = async () => {
   const data = await getNewFlightsData();
   if (!Object.keys(data).includes('flights')) {
-    await initialCache();
+    await setInitial();
   } else {
     Object.assign(cache, data, cachedStatus);
     logger.info(`Initial flights data cached!`);
   }
 };
 
-const getCachedData = reason => {
+const getData = reason => {
   return { ...reason, ...cache };
 };
 
-const getCacheOnTimeout = delay => {
+const getDataOnTimeout = delay => {
   return new Promise(resolve =>
     setTimeout(
       resolve,
       delay,
-      getCachedData({ error: { message: 'Service took too long to respond' } }),
+      getData({ error: { message: 'Service took too long to respond' } }),
     ),
   );
 };
 
-module.exports = { cacheData, getCachedData, initialCache, getCacheOnTimeout };
+module.exports = {
+  setData,
+  getData,
+  setInitial,
+  getDataOnTimeout,
+};

@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const getFlights = require('../../flights/getFlights');
 const cache = require('../../cache');
-const flights = require('../../flights');
+const flightsUtils = require('../../flights/flightsDataUtils');
 
 const promiseTimeout = (delay, data) => {
   return new Promise(resolve => setTimeout(resolve, delay, data));
@@ -11,7 +11,7 @@ const promiseTimeout = (delay, data) => {
 describe('flights', () => {
   describe('processApiResponse', () => {
     const getDataOnTimeoutStub = sinon.stub(cache, 'getDataOnTimeout');
-    const getNewFlightsDataStub = sinon.stub(flights, 'getNewFlightsData');
+    const getNewFlightsDataStub = sinon.stub(flightsUtils, 'getNewFlightsData');
     it('should return new list of flights if response time < 1000 ms', async () => {
       getDataOnTimeoutStub.returns(promiseTimeout(1000, 'error'));
       getNewFlightsDataStub.returns(promiseTimeout(250, 'flights'));

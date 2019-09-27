@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const {
   processApiResponse,
   processFlightsData,
-} = require('../../flights/flights');
+} = require('../../flights/flightsDataUtils');
 const flightLists = require('../fixtures/flightLists');
 const rawResponse = require('../fixtures/rawResponse');
 

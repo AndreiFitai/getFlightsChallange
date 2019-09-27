@@ -1,13 +1,13 @@
 const getFlights = require('./getFlights');
-const { cacheData, getCachedData } = require('../cache');
+const cache = require('../cache');
 
 module.exports = async () => {
   const flights = await getFlights();
   if (flights.error) {
-    return JSON.stringify(getCachedData(flights));
+    return JSON.stringify(cache.getData(flights));
   }
 
-  cacheData(flights);
+  cache.setData(flights);
 
   return JSON.stringify(flights);
 };

@@ -1,13 +1,13 @@
 const { getEnv } = require('../helpers');
-const { getCacheOnTimeout } = require('../cache');
-const { getNewFlightsData } = require('./flightsDataUtils');
+const cache = require('../cache');
+const flights = require('./flightsDataUtils');
 
 const responseTime = getEnv('RESPONSE_TIME') || 1000;
 
 module.exports = async () => {
   return Promise.race([
-    getNewFlightsData(),
-    getCacheOnTimeout(responseTime),
+    flights.getNewFlightsData(),
+    cache.getDataOnTimeout(responseTime),
   ]).then(value => {
     return value;
   });

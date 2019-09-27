@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const { logger, getEnv } = require('./helpers');
 const flights = require('./flights');
-const { initialCache } = require('./cache');
+const cache = require('./cache');
 
 const app = express();
 const router = express.Router();
@@ -15,7 +15,7 @@ const server = http.createServer(app);
 
 server.listen({ port }, () => {
   logger.info(`🚀 Server ready at http://localhost:${port}`);
-  initialCache();
+  cache.setInitial();
 });
 
 router.get('/', async (req, res) => {
