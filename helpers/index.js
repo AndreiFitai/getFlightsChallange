@@ -21,7 +21,8 @@ const { env } = process;
 const getEnv = (variable, required) => {
   if (!env[variable] && required) {
     if (env.NODE_ENV !== 'test') {
-      throw new Error(`Environment variable ${variable} is required`);
+      logger.error(`Environment variable ${variable} is required`);
+      throw new Error(`Required enviroment variable missing`);
     }
   }
   if (!env[variable]) {
